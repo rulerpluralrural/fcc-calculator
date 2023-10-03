@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Header() {
 	return (
-		<div className="flex justify-between items-center gap-x-3">
+		<div className="flex justify-between items-center w-[400px]">
 			<div>
 				<h1 className="project-title text-2xl">FreeCodeCamp Calculator</h1>
 			</div>

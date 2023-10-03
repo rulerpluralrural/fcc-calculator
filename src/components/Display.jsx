@@ -1,12 +1,18 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useContext } from "react";
+import { CalculatorContext } from "./Calculator";
+
 
 export default function Display() {
+
+    const {currentOperand, prevOperand} = useContext(CalculatorContext)
+
 	return (
 		<div className="display-container text-3xl">
 			<div className="upper flex justify-between items-center h-[50px] w-full bg-[#242323]">
 				<p className="text-lg ml-3">Ruralpluralrural</p>
-				<svg className="mr-3"
+				<svg
+					className="mr-3"
 					width="40px"
 					height="40px"
 					viewBox="-0.5 0 25 25"
@@ -127,11 +133,15 @@ export default function Display() {
 					/>
 				</svg>
 			</div>
-			<div id="display" className="h-[100px] w-full border-y-[1px] border-gray-800 bg-gradient-to-b from-[#4B4B4B] to-[#6D6C6C] flex justify-start items-end px-2">
-				<span id="display-span">111</span>
+			<div className="h-[100px] w-full border-y-[1px] border-gray-800 bg-gradient-to-b from-[#4B4B4B] to-[#6D6C6C] flex justify-end items-end px-2">
+				<span id="result-display" className="text-4xl">
+					{prevOperand}
+				</span>
 			</div>
-			<div id="input" className="h-[60px] overflow-scroll bg-gradient-to-t from-[#4B4B4B] to-[#6D6C6C] border-b-[1px] border-gray-800 flex justify- items-end px-2">
-				<span id="input-span">69</span>
+			<div className="h-[60px] overflow-scroll bg-gradient-to-t from-[#4B4B4B] to-[#6D6C6C] border-b-[1px] border-gray-800 flex justify-end items-end px-2">
+				<span id="display" className="text-3xl">
+                    {currentOperand}
+				</span>
 			</div>
 		</div>
 	);
