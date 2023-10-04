@@ -8,16 +8,22 @@ import Body from "./Body";
 export const CalculatorContext = createContext(null);
 
 export default function Calculator() {
-	const [currentOperand, setCurrentOperand] = useState('');
-	const [prevOperand, setPrevOperand] = useState('');
+	const [currentOperand, setCurrentOperand] = useState("0");
+	const [result, setResult] = useState("");
+	const [clear, setClear] = useState(false);
+	const [formula, setFormula] = useState("")
 
 	return (
 		<CalculatorContext.Provider
 			value={{
 				currentOperand,
 				setCurrentOperand,
-				prevOperand,
-				setPrevOperand,
+				result,
+				setResult,
+				clear,
+				setClear,
+				formula,
+				setFormula
 			}}
 		>
 			<div className="flex flex-col font-mono text-base h-[515px] w-[410px] bg-[#343536] text-white rounded-md border-1 border-[#313038] overflow-hidden">

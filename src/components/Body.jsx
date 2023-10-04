@@ -6,68 +6,77 @@ const buttonStyle = "py-3 border-[1px] border-black rounded-[5px]";
 const normalButtonStyle =
 	"bg-gray-700 rounded-[5px] border-[1px] border-black p-2 hover:bg-gray-600";
 const numberButtons = [7, 8, 9, 4, 5, 6, 1, 2, 3];
+const endsWithOperator = /[*+-/]$/;
+const isOperator = /[*/+-]/;
 
 export default function Body() {
-	const { currentOperand, setCurrentOperand, prevOperand, setPrevOperand } =
-		useContext(CalculatorContext);
+	const {
+		currentOperand,
+		setCurrentOperand,
+		result,
+		setResult,
+		clear,
+		setClear,
+		formula,
+		setFormula
+	} = useContext(CalculatorContext);
 
 	function handleNum(num) {
 		return () => {
+			if (currentOperand === "Error") return;
 			if (num === 0 && currentOperand === "0") return;
-			if (num === "." && currentOperand.includes(".")) return;
-			setCurrentOperand(currentOperand + num.toString());
+			if (clear) {
+				setCurrentOperand(num.toString());
+				setClear(false);
+			} else {
+				setCurrentOperand(currentOperand + num.toString())
+				setFormula(currentOperand + num.toString())
+			}
 		};
 	}
 
 	function handleOperator(operator) {
 		return () => {
-			if (
-				operator === "+" ||
-				operator === "-" ||
-				operator === "÷" ||
-				operator === "×"
-			) {
-				setPrevOperand(currentOperand + operator);
-				setCurrentOperand("");
+			if (currentOperand === "Error") return;
+			if (operator !== "-" && currentOperand === "") return;
+			if (endsWithOperator.test(currentOperand)) return;
+			setResult(currentOperand + operator);
+			setFormula(currentOperand + operator)
+			setCurrentOperand(operator)
+		};
+	}
+
+	function handleDecimal(val) {
+		return () => {
+			if (currentOperand === "Error") return;
+			if (val === "." && currentOperand.includes(".")) return;
+			if (currentOperand === "0" && result === "") {
+				setCurrentOperand("0" + val);
+				setClear(false)
+			} else {
+				setCurrentOperand(currentOperand + val)
 			}
 		};
 	}
 
 	function handleEvaluate() {
-		const operator = prevOperand.charAt(prevOperand.length - 1)
-
-			switch (operator) {
-				case "+":
-					setPrevOperand(
-						parseFloat(prevOperand) + parseFloat(currentOperand)
-					);
-					break;
-				case "-":
-					setPrevOperand(
-						parseFloat(prevOperand) - parseFloat(currentOperand)
-					);
-					break;
-				case "×":
-					setPrevOperand(
-						parseFloat(prevOperand) * parseFloat(currentOperand)
-					);
-					break;
-				case "÷":
-					setPrevOperand(
-						parseFloat(prevOperand) / parseFloat(currentOperand)
-					);
-					break;
-			}
-
-		setCurrentOperand("");
+		if (currentOperand === "Error") return;
+		try {
+			setCurrentOperand(eval(currentOperand));
+			setResult(currentOperand + "=" + eval(currentOperand));
+		} catch (error) {
+			setCurrentOperand("Error");
+		}
 	}
 
 	function handleClear() {
-		setCurrentOperand("");
-		setPrevOperand("");
+		setCurrentOperand("0");
+		setResult("");
+		setClear(true);
 	}
 
 	function handleDelete() {
+		if (currentOperand === "Error") return;
 		setCurrentOperand(currentOperand.slice(0, -1));
 	}
 
@@ -91,7 +100,7 @@ export default function Body() {
 					className={`percent-btn ${normalButtonStyle}`}
 					onClick={handleOperator("%")}
 				>
-					%
+					mod
 				</button>
 			</div>
 			<div className="lower-btn grid grid-cols-4 gap-3">
@@ -118,21 +127,21 @@ export default function Body() {
 				<button
 					className={`${normalButtonStyle}`}
 					id="multiply"
-					onClick={handleOperator("×")}
+					onClick={handleOperator("*")}
 				>
 					×
 				</button>
 				<button
 					className={`${normalButtonStyle}`}
 					id="divide"
-					onClick={handleOperator("÷")}
+					onClick={handleOperator("/")}
 				>
 					÷
 				</button>
 				<button
 					className={`${normalButtonStyle}`}
 					id="decimal"
-					onClick={handleNum(".")}
+					onClick={handleDecimal(".")}
 				>
 					.
 				</button>

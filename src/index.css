@@ -26,3 +26,7 @@ input:checked ~ .dot {
 input:checked ~ .bg-block {
 	background-color: black;
 }
+
+span {
+  scrollbar-width: thin;
+}
