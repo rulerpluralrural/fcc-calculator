@@ -7,7 +7,7 @@ const normalButtonStyle =
 	"bg-gray-700 rounded-[5px] border-[1px] border-black p-2 hover:bg-gray-600";
 const numberButtons = [7, 8, 9, 4, 5, 6, 1, 2, 3];
 const endsWithOperator = /[*+-/]$/;
-const isOperator = /[*/+-]/;
+// const isOperator = /[*/+-]/;
 
 export default function Body() {
 	const {
@@ -17,20 +17,24 @@ export default function Body() {
 		setResult,
 		clear,
 		setClear,
-		formula,
-		setFormula
+		evaluated,
+		setEvaluated,
 	} = useContext(CalculatorContext);
+	console.log("Current Operand:" + currentOperand);
+	console.log("Result:" + result);
 
 	function handleNum(num) {
 		return () => {
 			if (currentOperand === "Error") return;
 			if (num === 0 && currentOperand === "0") return;
+			if (num === 0 && currentOperand.indexOf("0") === 1) return;
 			if (clear) {
 				setCurrentOperand(num.toString());
+				setResult(num.toString());
 				setClear(false);
 			} else {
-				setCurrentOperand(currentOperand + num.toString())
-				setFormula(currentOperand + num.toString())
+				setCurrentOperand(currentOperand + num.toString());
+				setResult(result + num.toString());
 			}
 		};
 	}
@@ -38,11 +42,22 @@ export default function Body() {
 	function handleOperator(operator) {
 		return () => {
 			if (currentOperand === "Error") return;
-			if (operator !== "-" && currentOperand === "") return;
-			if (endsWithOperator.test(currentOperand)) return;
-			setResult(currentOperand + operator);
-			setFormula(currentOperand + operator)
-			setCurrentOperand(operator)
+			if (endsWithOperator.test(currentOperand)) {
+				setCurrentOperand(operator);
+				setResult(result.slice(0, -1) + operator);
+				return;
+			}
+			if (clear) {
+				return;
+			} else {
+				setResult(result + operator);
+				setCurrentOperand(operator);
+			}
+			if (evaluated) {
+				setResult(currentOperand + operator);
+				setEvaluated(false);
+				return;
+			}
 		};
 	}
 
@@ -52,9 +67,11 @@ export default function Body() {
 			if (val === "." && currentOperand.includes(".")) return;
 			if (currentOperand === "0" && result === "") {
 				setCurrentOperand("0" + val);
-				setClear(false)
+				setResult("0" + val);
+				setClear(false);
 			} else {
-				setCurrentOperand(currentOperand + val)
+				setCurrentOperand(currentOperand + val);
+				setResult(result + val);
 			}
 		};
 	}
@@ -62,22 +79,32 @@ export default function Body() {
 	function handleEvaluate() {
 		if (currentOperand === "Error") return;
 		try {
-			setCurrentOperand(eval(currentOperand));
-			setResult(currentOperand + "=" + eval(currentOperand));
+			setCurrentOperand(eval(result));
+			setResult(
+				result + "=" + eval(result)
+			);
 		} catch (error) {
 			setCurrentOperand("Error");
 		}
+		setEvaluated(true);
 	}
 
 	function handleClear() {
 		setCurrentOperand("0");
 		setResult("");
+		setEvaluated(false);
 		setClear(true);
 	}
 
 	function handleDelete() {
 		if (currentOperand === "Error") return;
-		setCurrentOperand(currentOperand.slice(0, -1));
+		if (evaluated) return;
+		try {
+			setCurrentOperand(currentOperand.slice(0, -1));
+			setResult(result.slice(0, -1));
+		} catch (error) {
+			return error;
+		}
 	}
 
 	return (
@@ -133,10 +160,10 @@ export default function Body() {
 				</button>
 				<button
 					className={`${normalButtonStyle}`}
-					id="divide"
-					onClick={handleOperator("/")}
+					id="add"
+					onClick={handleOperator("+")}
 				>
-					÷
+					+
 				</button>
 				<button
 					className={`${normalButtonStyle}`}
@@ -154,10 +181,10 @@ export default function Body() {
 				</button>
 				<button
 					className={`${normalButtonStyle}`}
-					id="add"
-					onClick={handleOperator("+")}
+					id="divide"
+					onClick={handleOperator("/")}
 				>
-					+
+					÷
 				</button>
 				<button
 					className={`${normalButtonStyle}`}
