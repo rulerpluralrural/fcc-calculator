@@ -11,8 +11,8 @@ export default function Calculator() {
 	const [currentOperand, setCurrentOperand] = useState("0");
 	const [result, setResult] = useState("");
 	const [clear, setClear] = useState(true);
-	const [evaluated, setEvaluated] = useState(false)
-	const [changeColor, setChangeColor] = useState(false)
+	const [evaluated, setEvaluated] = useState(false);
+	const [changeColor, setChangeColor] = useState(false);
 
 	return (
 		<CalculatorContext.Provider
@@ -26,7 +26,7 @@ export default function Calculator() {
 				evaluated,
 				setEvaluated,
 				changeColor,
-				setChangeColor
+				setChangeColor,
 			}}
 		>
 			<div className="flex flex-col font-mono text-base h-[515px] w-[410px] bg-[#343536] text-white rounded-md border-1 border-[#313038] overflow-hidden">

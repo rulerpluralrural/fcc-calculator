@@ -2,10 +2,8 @@
 import React, { useContext } from "react";
 import { CalculatorContext } from "./Calculator";
 
-
 export default function Display() {
-
-    const {currentOperand, result} = useContext(CalculatorContext)
+	const { currentOperand, result } = useContext(CalculatorContext);
 
 	return (
 		<div className="display-container text-3xl">
@@ -134,11 +132,11 @@ export default function Display() {
 				</svg>
 			</div>
 			<div className="h-[100px] py-2 border-y-[1px] border-gray-800 bg-gradient-to-b from-[#4B4B4B] to-[#6D6C6C] flex justify-end items-end px-2 overflow-scroll">
-					<span className="overflow-auto">{result}</span>
+				<span className="overflow-auto">{result}</span>
 			</div>
 			<div className="h-[60px] bg-gradient-to-t from-[#4B4B4B] to-[#6D6C6C] border-b-[1px] border-gray-800 flex justify-end items-end px-2 overflow-scroll">
 				<span id="display" className="text-3xl overflow-auto">
-                    {currentOperand}
+					{currentOperand}
 				</span>
 			</div>
 		</div>

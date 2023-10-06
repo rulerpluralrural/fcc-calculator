@@ -18,8 +18,9 @@ export default function Body() {
 		clear,
 		setClear,
 		evaluated,
-		setEvaluated,
+		setEvaluated
 	} = useContext(CalculatorContext);
+
 	console.log("Current Operand:" + currentOperand);
 	console.log("Result:" + result);
 
